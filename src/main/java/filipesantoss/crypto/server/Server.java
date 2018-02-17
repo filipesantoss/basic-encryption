@@ -1,7 +1,9 @@
 package filipesantoss.crypto.server;
 
 import filipesantoss.crypto.communication.KeyChain;
+import filipesantoss.crypto.communication.Message;
 import filipesantoss.crypto.util.Constants;
+import filipesantoss.crypto.util.Stream;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -30,11 +32,32 @@ public class Server {
 
         while (true) {
             Socket client = socket.accept();
+            System.out.println("client connected");
             pool.submit(new ClientHandler(client, keyChain.getSymmetric(), this));
         }
     }
 
     public void add(ClientHandler client) {
         clients.add(client);
+    }
+
+    public void remove(ClientHandler client) {
+        clients.remove(client);
+    }
+
+    public void broadcast(ClientHandler client, Message message) {
+        for (ClientHandler handler : clients) {
+
+            if (handler == client) {
+                System.out.println("same");
+                continue;
+            }
+
+            handler.write(message);
+        }
+    }
+
+    public void stop() {
+        Stream.close(socket);
     }
 }

@@ -1,8 +1,6 @@
 package filipesantoss.crypto.util;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
 
 public class Stream {
@@ -13,9 +11,16 @@ public class Stream {
         try {
             object = (T) input.readObject();
 
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
+            System.err.println("Failed to cast object.");
+        }
+
+        catch (EOFException e) {
+            //TODO reaching end of object is an expected behaviour. fix?
+        }
+
+        catch (IOException e) {
             System.err.println("Failed to read object.");
-            e.printStackTrace();
         }
 
         return object;
@@ -32,17 +37,15 @@ public class Stream {
 
         } catch (IOException e) {
             System.err.println("Failed to write object.");
-            e.printStackTrace();
         }
     }
 
-    public static void close(Socket socket) {
+    public static void close(Closeable socket) {
         try {
             socket.close();
 
         } catch (IOException e) {
             System.err.println("Failed to close socket.");
-            e.printStackTrace();
         }
     }
 }

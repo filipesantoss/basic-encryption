@@ -17,6 +17,7 @@ public class ClientHandler implements Runnable {
     private final Socket client;
     private final Server server;
     private final KeyChain keyChain;
+    private ObjectOutputStream output;
 
     public ClientHandler(Socket client, Key symmetric, Server server) throws NoSuchAlgorithmException {
         this.client = client;
@@ -28,21 +29,39 @@ public class ClientHandler implements Runnable {
     @Override
     public void run() {
         try {
+            output = new ObjectOutputStream(client.getOutputStream());
             ObjectInputStream input = new ObjectInputStream(client.getInputStream());
-            ObjectOutputStream output = new ObjectOutputStream(client.getOutputStream());
 
             exchangePublicKeys(output, input);
             sendSymmetricKey(output);
             server.add(this);
 
+            while (true) {
+
+                Message message = Stream.read(input);
+
+                if (message == null) {
+                    break;
+                }
+
+                server.broadcast(this, message);
+            }
+
+            server.remove(this);
+            stop();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Failed to setup streams.");
         }
+    }
+
+    private void stop() {
+        Stream.close(client);
     }
 
     private void exchangePublicKeys(ObjectOutputStream output, ObjectInputStream input) {
         Stream.write(output, keyChain.getPublic());
+
         Key foreign = Stream.read(input);
         keyChain.setForeign(foreign);
     }
@@ -50,5 +69,9 @@ public class ClientHandler implements Runnable {
     private void sendSymmetricKey(ObjectOutputStream output) {
         Message<Key> sealedSymmetric = keyChain.encryptWithForeign(keyChain.getSymmetric());
         Stream.write(output, sealedSymmetric);
+    }
+
+    public void write(Message message) {
+        Stream.write(output, message);
     }
 }

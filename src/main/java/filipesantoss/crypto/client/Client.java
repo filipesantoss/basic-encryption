@@ -27,12 +27,13 @@ public class Client {
         keyChain = new KeyChain(Constants.KEYPAIR_ALGORITHM, Constants.KEYPAIR_KEY_SIZE);
         exchangePublicKeys();
         receiveSymmetricKey();
+        System.out.println("CONNECTED.");
     }
 
     public void start() {
+        new Thread(new ScannerHandler(output, socket, keyChain)).start();
 
         while (true) {
-
             Message<String> message = Stream.read(input);
 
             if (message == null) {
@@ -50,11 +51,13 @@ public class Client {
     private void exchangePublicKeys() {
         Key foreign = Stream.read(input);
         keyChain.setForeign(foreign);
+
         Stream.write(output, keyChain.getPublic());
     }
 
     private void receiveSymmetricKey() {
         Message<Key> sealedSymmetric = Stream.read(input);
+
         Key symmetric = sealedSymmetric.getContent(keyChain.getPrivate());
         keyChain.setSymmetric(symmetric);
     }

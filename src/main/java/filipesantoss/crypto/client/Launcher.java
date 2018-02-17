@@ -15,15 +15,12 @@ public class Launcher {
 
         } catch (IOException e) {
             System.err.println("Failed to connect to server.");
-            e.printStackTrace();
 
         } catch (NoSuchAlgorithmException e) {
             System.err.println("Failed to exchange keys.");
-            e.printStackTrace();
         }
 
         finally {
-
             if (client != null) {
                 client.stop();
             }
