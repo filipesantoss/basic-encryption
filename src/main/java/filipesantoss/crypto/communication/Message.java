@@ -1,4 +1,4 @@
-package filipesantoss.crypto.util;
+package filipesantoss.crypto.communication;
 
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;

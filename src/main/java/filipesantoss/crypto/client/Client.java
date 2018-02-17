@@ -1,7 +1,7 @@
 package filipesantoss.crypto.client;
 
-import filipesantoss.crypto.util.KeyChain;
-import filipesantoss.crypto.util.Message;
+import filipesantoss.crypto.communication.KeyChain;
+import filipesantoss.crypto.communication.Message;
 import filipesantoss.crypto.util.Stream;
 import filipesantoss.crypto.util.Constants;
 
