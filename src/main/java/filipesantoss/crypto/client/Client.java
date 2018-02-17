@@ -1,8 +1,9 @@
 package filipesantoss.crypto.client;
 
 import filipesantoss.crypto.util.KeyChain;
+import filipesantoss.crypto.util.Message;
 import filipesantoss.crypto.util.Stream;
-import filipesantoss.crypto.util.Values;
+import filipesantoss.crypto.util.Constants;
 
 import java.io.*;
 import java.net.Socket;
@@ -16,18 +17,27 @@ public class Client {
     private ObjectOutputStream output;
     private KeyChain keyChain;
 
-    public void connect() throws IOException, NoSuchAlgorithmException {
-        socket = new Socket(Values.HOST, Values.PORT);
+    public Client() throws IOException {
+        socket = new Socket(Constants.HOST, Constants.PORT);
         input = new ObjectInputStream(socket.getInputStream());
         output = new ObjectOutputStream(socket.getOutputStream());
-        keyChain = new KeyChain(Values.KEYPAIR_ALGORITHM, Values.KEYPAIR_KEY_SIZE);
+    }
+
+    public void init() throws NoSuchAlgorithmException {
+        keyChain = new KeyChain(Constants.KEYPAIR_ALGORITHM, Constants.KEYPAIR_KEY_SIZE);
         exchangePublicKeys();
+        receiveSymmetricKey();
     }
 
     private void exchangePublicKeys() {
-
         Key foreign = Stream.read(input);
         keyChain.setForeign(foreign);
         Stream.write(output, keyChain.getPublic());
+    }
+
+    private void receiveSymmetricKey() {
+        Message<Key> sealedSymmetric = Stream.read(input);
+        Key symmetric = sealedSymmetric.getContent(keyChain.getPrivate());
+        keyChain.setSymmetric(symmetric);
     }
 }

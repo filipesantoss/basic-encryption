@@ -9,12 +9,14 @@ public class Launcher {
 
         try {
             Client client = new Client();
-            client.connect();
+            client.init();
 
         } catch (IOException e) {
+            System.err.println("Failed to connect to server.");
             e.printStackTrace();
 
         } catch (NoSuchAlgorithmException e) {
+            System.err.println("Failed to exchange keys.");
             e.printStackTrace();
         }
     }
