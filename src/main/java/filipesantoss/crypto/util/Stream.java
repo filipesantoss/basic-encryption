@@ -1,24 +1,18 @@
 package filipesantoss.crypto.util;
 
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.security.Key;
 
 public class Stream {
 
     public static <T> T read(ObjectInputStream input) {
-
         T object = null;
 
         try {
             object = (T) input.readObject();
 
-        } catch (IOException e) {
-            e.printStackTrace();
-
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
 
@@ -26,7 +20,6 @@ public class Stream {
     }
 
     public static void write(ObjectOutputStream output, Object object) {
-
         if (object == null) {
             return;
         }
@@ -38,6 +31,5 @@ public class Stream {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 }

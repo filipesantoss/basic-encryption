@@ -1,6 +1,6 @@
 package filipesantoss.crypto.util;
 
-public class Values {
+public class Constants {
 
     public static final String HOST = "localhost";
     public static final int PORT = 8888;
