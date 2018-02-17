@@ -29,6 +29,24 @@ public class Client {
         receiveSymmetricKey();
     }
 
+    public void start() {
+
+        while (true) {
+
+            Message<String> message = Stream.read(input);
+
+            if (message == null) {
+                break;
+            }
+
+            String text = message.getContent(keyChain.getSymmetric());
+            System.out.println(text);
+        }
+
+        stop();
+    }
+
+
     private void exchangePublicKeys() {
         Key foreign = Stream.read(input);
         keyChain.setForeign(foreign);
@@ -39,5 +57,9 @@ public class Client {
         Message<Key> sealedSymmetric = Stream.read(input);
         Key symmetric = sealedSymmetric.getContent(keyChain.getPrivate());
         keyChain.setSymmetric(symmetric);
+    }
+
+    public void stop() {
+        Stream.close(socket);
     }
 }

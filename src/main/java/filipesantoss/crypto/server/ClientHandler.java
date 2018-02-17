@@ -27,7 +27,6 @@ public class ClientHandler implements Runnable {
 
     @Override
     public void run() {
-
         try {
             ObjectInputStream input = new ObjectInputStream(client.getInputStream());
             ObjectOutputStream output = new ObjectOutputStream(client.getOutputStream());
@@ -49,7 +48,7 @@ public class ClientHandler implements Runnable {
     }
 
     private void sendSymmetricKey(ObjectOutputStream output) {
-        Message<Key> sealedSymmetric = keyChain.cipherWithForeign(keyChain.getSymmetric());
+        Message<Key> sealedSymmetric = keyChain.encryptWithForeign(keyChain.getSymmetric());
         Stream.write(output, sealedSymmetric);
     }
 }

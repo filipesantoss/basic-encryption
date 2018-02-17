@@ -6,7 +6,6 @@ import java.security.NoSuchAlgorithmException;
 public class Launcher {
 
     public static void main(String[] args) {
-
         try {
             Server server = new Server();
             server.start();

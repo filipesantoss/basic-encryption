@@ -3,6 +3,7 @@ package filipesantoss.crypto.util;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.Socket;
 
 public class Stream {
 
@@ -13,6 +14,7 @@ public class Stream {
             object = (T) input.readObject();
 
         } catch (IOException | ClassNotFoundException e) {
+            System.err.println("Failed to read object.");
             e.printStackTrace();
         }
 
@@ -29,6 +31,17 @@ public class Stream {
             output.flush();
 
         } catch (IOException e) {
+            System.err.println("Failed to write object.");
+            e.printStackTrace();
+        }
+    }
+
+    public static void close(Socket socket) {
+        try {
+            socket.close();
+
+        } catch (IOException e) {
+            System.err.println("Failed to close socket.");
             e.printStackTrace();
         }
     }

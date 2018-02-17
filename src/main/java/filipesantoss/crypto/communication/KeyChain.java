@@ -32,7 +32,7 @@ public class KeyChain {
         }
     }
 
-    private <T> Message<T> cipher(Serializable content, Key key) {
+    private <T> Message<T> encrypt(Serializable content, Key key) {
         Message<T> message = null;
 
         try {
@@ -42,7 +42,7 @@ public class KeyChain {
 
         } catch (IOException | IllegalBlockSizeException | NoSuchAlgorithmException |
                 NoSuchPaddingException | InvalidKeyException e) {
-            System.err.println("Failed to cipher " + content);
+            System.err.println("Failed to encrypt " + content);
             e.printStackTrace();
 
         }
@@ -50,8 +50,12 @@ public class KeyChain {
         return message;
     }
 
-    public <T> Message<T> cipherWithForeign(Serializable content) {
-        return cipher(content, foreign);
+    public <T> Message<T> encryptWithForeign(Serializable content) {
+        return encrypt(content, foreign);
+    }
+
+    public <T> Message<T> encryptWithSymmetric(Serializable content) {
+        return encrypt(content, symmetric);
     }
 
     public Key getSymmetric() {
