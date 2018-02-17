@@ -12,7 +12,7 @@ import java.security.*;
 
 public class KeyChain {
 
-    private KeyPair pair;
+    private final KeyPair pair;
     private Key symmetric;
     private Key foreign;
 

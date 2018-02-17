@@ -12,9 +12,9 @@ import java.security.NoSuchAlgorithmException;
 
 public class Client {
 
-    private Socket socket;
-    private ObjectInputStream input;
-    private ObjectOutputStream output;
+    private final Socket socket;
+    private final ObjectInputStream input;
+    private final ObjectOutputStream output;
     private KeyChain keyChain;
 
     public Client() throws IOException {

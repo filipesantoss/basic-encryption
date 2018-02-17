@@ -9,12 +9,14 @@ public class Launcher {
 
         try {
             Server server = new Server();
-            server.init();
+            server.start();
 
         } catch (IOException e) {
+            System.err.println("Failed to accept client connection.");
             e.printStackTrace();
 
         } catch (NoSuchAlgorithmException e) {
+            System.err.println("Failed to create KeyChain.");
             e.printStackTrace();
         }
     }
