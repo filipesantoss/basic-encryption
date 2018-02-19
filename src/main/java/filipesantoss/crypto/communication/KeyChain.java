@@ -10,25 +10,40 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.security.*;
 
+/**
+ * Wrapper class to encapsulate Key related behavior.
+ */
 public class KeyChain {
 
     private final KeyPair pair;
     private Key symmetric;
     private Key foreign;
 
+    /**
+     * Initializes a KeyPair generated from the specified algorithm and with the specified key size.
+     *
+     * @param algorithm - the algorithm used to generate the KeyPair.
+     * @param keySize   - the key size used by the KeyPairGenerator.
+     * @throws NoSuchAlgorithmException if there's no supported implementation of the specified algorithm.
+     * @see KeyPairGenerator#generateKeyPair()
+     */
     public KeyChain(String algorithm, int keySize) throws NoSuchAlgorithmException {
-        KeyPairGenerator keyGen = KeyPairGenerator.getInstance(algorithm);
-        keyGen.initialize(keySize);
-        pair = keyGen.generateKeyPair();
+        KeyPairGenerator generator = KeyPairGenerator.getInstance(algorithm);
+        generator.initialize(keySize);
+        pair = generator.generateKeyPair();
     }
 
+    /**
+     * Generates a symmetric key.
+     *
+     * @see KeyGenerator#generateKey()
+     */
     public void createSymmetric() {
         try {
             symmetric = KeyGenerator.getInstance(Constants.SYMMETRIC_KEY_ALGORITHM).generateKey();
 
         } catch (NoSuchAlgorithmException e) {
             System.err.println("Failed to generate symmetric key.");
-            e.printStackTrace();
         }
     }
 
@@ -43,17 +58,33 @@ public class KeyChain {
         } catch (IOException | IllegalBlockSizeException | NoSuchAlgorithmException |
                 NoSuchPaddingException | InvalidKeyException e) {
             System.err.println("Failed to encrypt " + content);
-            e.printStackTrace();
-
         }
 
         return message;
     }
 
+    /**
+     * Instantiates a Message with the specified content and the cipher initialized with the foreign key.
+     *
+     * @param content - the content of the message.
+     * @param <T>     - the expected return type.
+     * @return the instantiated message.
+     * @see Cipher#init(int, Key)
+     * @see Message
+     */
     public <T> Message<T> encryptWithForeign(Serializable content) {
         return encrypt(content, foreign);
     }
 
+    /**
+     * Instantiates a Message with the specified content and the cipher initialized with the symmetric key.
+     *
+     * @param content - the content of the message.
+     * @param <T>     - the expected return type.
+     * @return the instantiated message.
+     * @see Cipher#init(int, Key)
+     * @see Message
+     */
     public <T> Message<T> encryptWithSymmetric(Serializable content) {
         return encrypt(content, symmetric);
     }
