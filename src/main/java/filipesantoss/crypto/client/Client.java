@@ -10,6 +10,10 @@ import java.net.Socket;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 
+/**
+ * This class is responsible for establishing a connection to the server,
+ * exchanging keys with it and reading from it.
+ */
 public class Client {
 
     private final Socket socket;
@@ -23,16 +27,27 @@ public class Client {
         output = new ObjectOutputStream(socket.getOutputStream());
     }
 
+    /**
+     * Receives the server's public key and sends its own public key.
+     * Receives the server's symmetric key.
+     *
+     * @throws NoSuchAlgorithmException if there's no supported implementation of the algorithm
+     *                                  used to generate the public key.
+     */
     public void init() throws NoSuchAlgorithmException {
         keyChain = new KeyChain(Constants.KEYPAIR_ALGORITHM, Constants.KEYPAIR_KEY_SIZE);
         exchangePublicKeys();
         receiveSymmetricKey();
         System.out.println("CONNECTED.");
+        new Thread(new ScannerHandler(output, socket, keyChain)).start();
     }
 
+    /**
+     * While there's an object to read through the input stream, reads it, decrypts it and prints it.
+     *
+     * @see Message#getContent(Key)
+     */
     public void start() {
-        new Thread(new ScannerHandler(output, socket, keyChain)).start();
-
         while (true) {
             Message<String> message = Stream.read(input);
 
@@ -62,6 +77,9 @@ public class Client {
         keyChain.setSymmetric(symmetric);
     }
 
+    /**
+     * Closes the socket.
+     */
     public void stop() {
         Stream.close(socket);
     }
