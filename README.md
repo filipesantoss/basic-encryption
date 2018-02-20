@@ -4,7 +4,7 @@
 - [X] Server
 - [X] Key Wrapper
 - [X] Encryption 
-- [ ] Documentation
+- [X] Documentation
 - [ ] Tests
 - [ ] Deal with EOFException
 - [ ] Build

@@ -8,6 +8,7 @@ import filipesantoss.crypto.util.Stream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.net.Socket;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
@@ -26,6 +27,15 @@ public class ClientHandler implements Runnable {
         this.server = server;
     }
 
+    /**
+     * Writes the public key to the client and reads the client's public key.
+     * Writes an object containing the encrypted symmetric key to the client.
+     * While there's an object to read through the input stream, reads it and broadcasts it.
+     *
+     * @see Stream
+     * @see KeyChain#encryptWithForeign(Serializable)
+     * @see Server#broadcast(ClientHandler, Message)
+     */
     @Override
     public void run() {
         try {
@@ -68,9 +78,15 @@ public class ClientHandler implements Runnable {
 
     private void sendSymmetricKey(ObjectOutputStream output) {
         Message<Key> sealedSymmetric = keyChain.encryptWithForeign(keyChain.getSymmetric());
+
         Stream.write(output, sealedSymmetric);
     }
 
+    /**
+     * Writes a message to the client.
+     *
+     * @param message - the message to write.
+     */
     public void write(Message message) {
         Stream.write(output, message);
     }

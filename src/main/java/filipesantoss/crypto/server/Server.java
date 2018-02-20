@@ -23,8 +23,16 @@ public class Server {
         clients = new CopyOnWriteArrayList<>();
     }
 
+    /**
+     * Generates a symmetric key.
+     * Accepts TCP connections from clients and launches a thread to communicate with it.
+     *
+     * @throws NoSuchAlgorithmException if there's no supported implementation of the algorithm
+     *                                  used to generate the symmetric key.
+     * @throws IOException              if the connection can't be established.
+     * @see KeyChain#createSymmetric()
+     */
     public void start() throws NoSuchAlgorithmException, IOException {
-
         KeyChain keyChain = new KeyChain(Constants.KEYPAIR_ALGORITHM, Constants.KEYPAIR_KEY_SIZE);
         keyChain.createSymmetric();
 
@@ -37,19 +45,35 @@ public class Server {
         }
     }
 
+    /**
+     * Adds a client to the server.
+     *
+     * @param client - the client to be added.
+     */
     public void add(ClientHandler client) {
         clients.add(client);
     }
 
+    /**
+     * Removes a client from the server.
+     *
+     * @param client - the client to be removed.
+     */
     public void remove(ClientHandler client) {
         clients.remove(client);
     }
 
+    /**
+     * Writes a message to every client except the one sending it.
+     *
+     * @param client  - the client sending the message.
+     * @param message - the message to send.
+     * @see ClientHandler#write(Message)
+     */
     public void broadcast(ClientHandler client, Message message) {
         for (ClientHandler handler : clients) {
 
             if (handler == client) {
-                System.out.println("same");
                 continue;
             }
 
@@ -57,6 +81,9 @@ public class Server {
         }
     }
 
+    /**
+     * Closes the ServerSocket.
+     */
     public void stop() {
         Stream.close(socket);
     }

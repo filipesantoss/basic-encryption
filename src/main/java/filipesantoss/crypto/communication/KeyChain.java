@@ -64,7 +64,7 @@ public class KeyChain {
     }
 
     /**
-     * Instantiates a Message with the specified content and the cipher initialized with the foreign key.
+     * Returns a Message with the specified content and the cipher initialized with the foreign key.
      *
      * @param content - the content of the message.
      * @param <T>     - the expected return type.
@@ -77,7 +77,7 @@ public class KeyChain {
     }
 
     /**
-     * Instantiates a Message with the specified content and the cipher initialized with the symmetric key.
+     * Returns a Message with the specified content and the cipher initialized with the symmetric key.
      *
      * @param content - the content of the message.
      * @param <T>     - the expected return type.

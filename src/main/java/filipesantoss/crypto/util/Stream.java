@@ -4,7 +4,7 @@ import java.io.*;
 import java.net.Socket;
 
 /**
- * Utilitary class containing methods to read and write objects from and to object streams, as well as closing them.
+ * Class containing methods to read and write objects from and to object streams, as well as closing them.
  */
 public class Stream {
 

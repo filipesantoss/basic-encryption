@@ -17,8 +17,8 @@ import java.security.NoSuchAlgorithmException;
  */
 public class Message<T> extends SealedObject {
 
-    Message(Serializable message, Cipher cipher) throws IOException, IllegalBlockSizeException {
-        super(message, cipher);
+    Message(Serializable content, Cipher cipher) throws IOException, IllegalBlockSizeException {
+        super(content, cipher);
     }
 
     /**
