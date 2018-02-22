@@ -14,16 +14,13 @@ import java.security.NoSuchAlgorithmException;
 public class KeyHandlerTest {
 
     private KeyHandler keyHandler;
-    private String invalidAlgorithm;
     private String content;
 
     @Before
     public void setup() throws NoSuchAlgorithmException {
         content = "content";
-        String validAlgorithm = Constants.KEYPAIR_ALGORITHM;
-        invalidAlgorithm = "potato";
 
-        keyHandler = new KeyHandler(validAlgorithm, Constants.KEYPAIR_KEY_SIZE);
+        keyHandler = new KeyHandler(Constants.KEYPAIR_ALGORITHM, Constants.KEYPAIR_KEY_SIZE);
     }
 
     @Test
@@ -31,19 +28,6 @@ public class KeyHandlerTest {
         keyHandler.createSymmetric();
 
         Assert.assertNotNull(keyHandler.getSymmetric());
-    }
-
-    @Test
-    public void testInvalidCreateSymmetric() {
-        try {
-            keyHandler = new KeyHandler(invalidAlgorithm, Constants.KEYPAIR_KEY_SIZE);
-            keyHandler.createSymmetric();
-
-            Assert.assertNull(keyHandler.getSymmetric());
-
-        } catch (NoSuchAlgorithmException e) {
-            System.err.println("Algorithm " + invalidAlgorithm + " is invalid.");
-        }
     }
 
     @Test
