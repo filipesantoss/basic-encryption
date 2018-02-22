@@ -40,7 +40,6 @@ public class Server {
 
         while (true) {
             Socket client = socket.accept();
-            System.out.println("client connected");
             pool.submit(new ClientHandler(client, keyHandler.getSymmetric(), this));
         }
     }

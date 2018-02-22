@@ -6,5 +6,6 @@
 - [X] Encryption 
 - [X] Documentation
 - [X] Tests
+- [X] Build
+- [ ] Make PORT and HOST configurable
 - [ ] Deal with EOFException
-- [ ] Build
