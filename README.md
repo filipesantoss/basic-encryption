@@ -5,6 +5,6 @@
 - [X] Key Wrapper
 - [X] Encryption 
 - [X] Documentation
-- [ ] Tests
+- [X] Tests
 - [ ] Deal with EOFException
 - [ ] Build

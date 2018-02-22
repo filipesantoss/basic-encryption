@@ -84,7 +84,6 @@ public class KeyHandlerTest {
 
             Assert.assertNull(message.getContent(privateKey));
             Assert.assertEquals(message.getContent(keyHandler.getSymmetric()), content);
-            Assert.assertNotEquals(message.getContent(privateKey), content);
 
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException e) {
             System.err.println("Failed to create cipher: " + e.getMessage());
