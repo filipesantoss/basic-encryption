@@ -1,7 +1,7 @@
 package filipesantoss.crypto.server;
 
 import filipesantoss.crypto.util.Constants;
-import filipesantoss.crypto.communication.KeyChain;
+import filipesantoss.crypto.communication.KeyHandler;
 import filipesantoss.crypto.communication.Message;
 import filipesantoss.crypto.util.Stream;
 
@@ -17,13 +17,13 @@ public class ClientHandler implements Runnable {
 
     private final Socket client;
     private final Server server;
-    private final KeyChain keyChain;
+    private final KeyHandler keyHandler;
     private ObjectOutputStream output;
 
     public ClientHandler(Socket client, Key symmetric, Server server) throws NoSuchAlgorithmException {
         this.client = client;
-        keyChain = new KeyChain(Constants.KEYPAIR_ALGORITHM, Constants.KEYPAIR_KEY_SIZE);
-        keyChain.setSymmetric(symmetric);
+        keyHandler = new KeyHandler(Constants.KEYPAIR_ALGORITHM, Constants.KEYPAIR_KEY_SIZE);
+        keyHandler.setSymmetric(symmetric);
         this.server = server;
     }
 
@@ -33,7 +33,7 @@ public class ClientHandler implements Runnable {
      * While there's an object to read through the input stream, reads it and broadcasts it.
      *
      * @see Stream
-     * @see KeyChain#encryptWithForeign(Serializable)
+     * @see KeyHandler#encryptWithForeign(Serializable)
      * @see Server#broadcast(ClientHandler, Message)
      */
     @Override
@@ -70,14 +70,14 @@ public class ClientHandler implements Runnable {
     }
 
     private void exchangePublicKeys(ObjectOutputStream output, ObjectInputStream input) {
-        Stream.write(output, keyChain.getPublic());
+        Stream.write(output, keyHandler.getPublic());
 
         Key foreign = Stream.read(input);
-        keyChain.setForeign(foreign);
+        keyHandler.setForeign(foreign);
     }
 
     private void sendSymmetricKey(ObjectOutputStream output) {
-        Message<Key> sealedSymmetric = keyChain.encryptWithForeign(keyChain.getSymmetric());
+        Message<Key> sealedSymmetric = keyHandler.encryptWithForeign(keyHandler.getSymmetric());
 
         Stream.write(output, sealedSymmetric);
     }

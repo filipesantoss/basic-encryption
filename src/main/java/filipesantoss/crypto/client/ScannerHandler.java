@@ -1,10 +1,9 @@
 package filipesantoss.crypto.client;
 
-import filipesantoss.crypto.communication.KeyChain;
+import filipesantoss.crypto.communication.KeyHandler;
 import filipesantoss.crypto.communication.Message;
 import filipesantoss.crypto.util.Stream;
 
-import java.io.InputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.Socket;
@@ -16,12 +15,12 @@ import java.util.Scanner;
 public class ScannerHandler implements Runnable {
 
     private final ObjectOutputStream output;
-    private final KeyChain keyChain;
+    private final KeyHandler keyHandler;
     private final Socket socket;
 
-    public ScannerHandler(ObjectOutputStream output, Socket socket, KeyChain keyChain) {
+    public ScannerHandler(ObjectOutputStream output, Socket socket, KeyHandler keyHandler) {
         this.output = output;
-        this.keyChain = keyChain;
+        this.keyHandler = keyHandler;
         this.socket = socket;
     }
 
@@ -31,7 +30,7 @@ public class ScannerHandler implements Runnable {
      * and writes an object containing the encrypted version to the output stream.
      *
      * @see Scanner
-     * @see KeyChain#encryptWithSymmetric(Serializable)
+     * @see KeyHandler#encryptWithSymmetric(Serializable)
      * @see Stream#write(ObjectOutputStream, Object)
      */
     @Override
@@ -46,7 +45,7 @@ public class ScannerHandler implements Runnable {
                 break;
             }
 
-            Message<String> message = keyChain.encryptWithSymmetric(text);
+            Message<String> message = keyHandler.encryptWithSymmetric(text);
             Stream.write(output, message);
         }
 

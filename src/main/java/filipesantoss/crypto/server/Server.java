@@ -1,6 +1,6 @@
 package filipesantoss.crypto.server;
 
-import filipesantoss.crypto.communication.KeyChain;
+import filipesantoss.crypto.communication.KeyHandler;
 import filipesantoss.crypto.communication.Message;
 import filipesantoss.crypto.util.Constants;
 import filipesantoss.crypto.util.Stream;
@@ -30,18 +30,18 @@ public class Server {
      * @throws NoSuchAlgorithmException if there's no supported implementation of the algorithm
      *                                  used to generate the symmetric key.
      * @throws IOException              if the connection can't be established.
-     * @see KeyChain#createSymmetric()
+     * @see KeyHandler#createSymmetric()
      */
     public void start() throws NoSuchAlgorithmException, IOException {
-        KeyChain keyChain = new KeyChain(Constants.KEYPAIR_ALGORITHM, Constants.KEYPAIR_KEY_SIZE);
-        keyChain.createSymmetric();
+        KeyHandler keyHandler = new KeyHandler(Constants.KEYPAIR_ALGORITHM, Constants.KEYPAIR_KEY_SIZE);
+        keyHandler.createSymmetric();
 
         ExecutorService pool = Executors.newCachedThreadPool();
 
         while (true) {
             Socket client = socket.accept();
             System.out.println("client connected");
-            pool.submit(new ClientHandler(client, keyChain.getSymmetric(), this));
+            pool.submit(new ClientHandler(client, keyHandler.getSymmetric(), this));
         }
     }
 

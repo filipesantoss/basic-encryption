@@ -13,7 +13,7 @@ import java.security.*;
 /**
  * Wrapper class to encapsulate Key related behavior.
  */
-public class KeyChain {
+public class KeyHandler {
 
     private final KeyPair pair;
     private Key symmetric;
@@ -27,7 +27,7 @@ public class KeyChain {
      * @throws NoSuchAlgorithmException if there's no supported implementation of the specified algorithm.
      * @see KeyPairGenerator#generateKeyPair()
      */
-    public KeyChain(String algorithm, int keySize) throws NoSuchAlgorithmException {
+    public KeyHandler(String algorithm, int keySize) throws NoSuchAlgorithmException {
         KeyPairGenerator generator = KeyPairGenerator.getInstance(algorithm);
         generator.initialize(keySize);
         pair = generator.generateKeyPair();

@@ -1,6 +1,6 @@
 package filipesantoss.crypto.client;
 
-import filipesantoss.crypto.communication.KeyChain;
+import filipesantoss.crypto.communication.KeyHandler;
 import filipesantoss.crypto.communication.Message;
 import filipesantoss.crypto.util.Stream;
 import filipesantoss.crypto.util.Constants;
@@ -19,7 +19,7 @@ public class Client {
     private final Socket socket;
     private final ObjectInputStream input;
     private final ObjectOutputStream output;
-    private KeyChain keyChain;
+    private KeyHandler keyHandler;
 
     public Client() throws IOException {
         socket = new Socket(Constants.HOST, Constants.PORT);
@@ -35,11 +35,11 @@ public class Client {
      *                                  used to generate the public key.
      */
     public void init() throws NoSuchAlgorithmException {
-        keyChain = new KeyChain(Constants.KEYPAIR_ALGORITHM, Constants.KEYPAIR_KEY_SIZE);
+        keyHandler = new KeyHandler(Constants.KEYPAIR_ALGORITHM, Constants.KEYPAIR_KEY_SIZE);
         exchangePublicKeys();
         receiveSymmetricKey();
         System.out.println("CONNECTED.");
-        new Thread(new ScannerHandler(output, socket, keyChain)).start();
+        new Thread(new ScannerHandler(output, socket, keyHandler)).start();
     }
 
     /**
@@ -55,7 +55,7 @@ public class Client {
                 break;
             }
 
-            String text = message.getContent(keyChain.getSymmetric());
+            String text = message.getContent(keyHandler.getSymmetric());
             System.out.println(text);
         }
 
@@ -65,16 +65,16 @@ public class Client {
 
     private void exchangePublicKeys() {
         Key foreign = Stream.read(input);
-        keyChain.setForeign(foreign);
+        keyHandler.setForeign(foreign);
 
-        Stream.write(output, keyChain.getPublic());
+        Stream.write(output, keyHandler.getPublic());
     }
 
     private void receiveSymmetricKey() {
         Message<Key> sealedSymmetric = Stream.read(input);
 
-        Key symmetric = sealedSymmetric.getContent(keyChain.getPrivate());
-        keyChain.setSymmetric(symmetric);
+        Key symmetric = sealedSymmetric.getContent(keyHandler.getPrivate());
+        keyHandler.setSymmetric(symmetric);
     }
 
     /**
