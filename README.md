@@ -7,5 +7,5 @@
 - [X] Documentation
 - [X] Tests
 - [X] Build
-- [ ] Make PORT and HOST configurable
+- [X] Make PORT and HOST configurable
 - [ ] Deal with EOFException

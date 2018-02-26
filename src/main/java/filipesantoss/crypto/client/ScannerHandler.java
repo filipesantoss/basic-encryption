@@ -41,7 +41,7 @@ public class ScannerHandler implements Runnable {
             String text = scanner.nextLine();
 
             if (socket.isClosed()) {
-                System.err.println("Closing client...");
+                System.err.println("Server seems to be off. Closing client...");
                 break;
             }
 

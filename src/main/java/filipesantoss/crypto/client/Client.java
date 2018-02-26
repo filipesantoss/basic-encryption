@@ -21,8 +21,8 @@ public class Client {
     private final ObjectOutputStream output;
     private KeyHandler keyHandler;
 
-    public Client() throws IOException {
-        socket = new Socket(Constants.HOST, Constants.PORT);
+    public Client(String host, int port) throws IOException {
+        socket = new Socket(host, port);
         input = new ObjectInputStream(socket.getInputStream());
         output = new ObjectOutputStream(socket.getOutputStream());
     }

@@ -6,6 +6,7 @@ import filipesantoss.crypto.util.Constants;
 import filipesantoss.crypto.util.Stream;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.security.NoSuchAlgorithmException;
@@ -18,8 +19,8 @@ public class Server {
     private final ServerSocket socket;
     private final CopyOnWriteArrayList<ClientHandler> clients;
 
-    public Server() throws IOException {
-        socket = new ServerSocket(Constants.PORT);
+    public Server(int port) throws IOException {
+        socket = new ServerSocket(port);
         clients = new CopyOnWriteArrayList<>();
     }
 
@@ -33,6 +34,8 @@ public class Server {
      * @see KeyHandler#createSymmetric()
      */
     public void start() throws NoSuchAlgorithmException, IOException {
+        System.out.println("Running at " + InetAddress.getLocalHost() + ":" + socket.getLocalPort());
+
         KeyHandler keyHandler = new KeyHandler(Constants.KEYPAIR_ALGORITHM, Constants.KEYPAIR_KEY_SIZE);
         keyHandler.createSymmetric();
 
