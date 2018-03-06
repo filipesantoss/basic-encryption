@@ -18,10 +18,12 @@ public class Server {
 
     private final ServerSocket socket;
     private final CopyOnWriteArrayList<ClientHandler> clients;
+    private final ExecutorService pool;
 
     public Server(int port) throws IOException {
         socket = new ServerSocket(port);
         clients = new CopyOnWriteArrayList<>();
+        pool = Executors.newCachedThreadPool();
     }
 
     /**
@@ -39,12 +41,11 @@ public class Server {
         KeyHandler keyHandler = new KeyHandler(Constants.KEYPAIR_ALGORITHM, Constants.KEYPAIR_KEY_SIZE);
         keyHandler.createSymmetric();
 
-        ExecutorService pool = Executors.newCachedThreadPool();
-
         while (true) {
             Socket client = socket.accept();
             pool.submit(new ClientHandler(client, keyHandler.getSymmetric(), this));
         }
+
     }
 
     /**
@@ -87,6 +88,7 @@ public class Server {
      * Closes the ServerSocket.
      */
     public void stop() {
+        pool.shutdown();
         Stream.close(socket);
     }
 }
